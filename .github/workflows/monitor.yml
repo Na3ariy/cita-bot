@@ -1,33 +1,19 @@
 name: Cita Monitor
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'   # кожні 5 хвилин
-  workflow_dispatch:          # ручний запуск через кнопку на GitHub
+  workflow_dispatch:
 
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 8        # примусова зупинка якщо зависне
+    timeout-minutes: 3
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-          cache: 'pip'
-
-      - name: Install dependencies
+      - name: Test ICP connectivity
         run: |
-          pip install playwright requests
-          playwright install chromium --with-deps
-
-      - name: Run checker
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}   # автоматично доступний
-          GITHUB_REPO:    ${{ github.repository }}       # наприклад: yourname/cita-bot
-        run: python checker.py
+          echo "=== Тест з'єднання ==="
+          curl -v --max-time 30 \
+            -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" \
+            -H "Accept-Language: es-ES,es;q=0.9" \
+            "https://icp.administracionelectronica.gob.es/icpplus/index.html" \
+            -o /dev/null -w "HTTP статус: %{http_code}\nЧас з'єднання: %{time_connect}s\nЗагальний час: %{time_total}s\n"
