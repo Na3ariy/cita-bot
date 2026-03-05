@@ -2,13 +2,13 @@ name: Cita Monitor
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
-  workflow_dispatch:
+    - cron: '*/5 * * * *'   # кожні 5 хвилин
+  workflow_dispatch:          # ручний запуск через кнопку на GitHub
 
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 4
+    timeout-minutes: 8        # примусова зупинка якщо зависне
 
     steps:
       - name: Checkout repo
@@ -28,6 +28,6 @@ jobs:
       - name: Run checker
         env:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO:    ${{ github.repository }}
+          GITHUB_TOKEN:   ${{ secrets.GITHUB_TOKEN }}   # автоматично доступний
+          GITHUB_REPO:    ${{ github.repository }}       # наприклад: yourname/cita-bot
         run: python checker.py
