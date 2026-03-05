@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "chat_id": 435129073,
+    "nie": null,
+    "name": null,
+    "active": false,
+    "state": "waiting_nie",
+    "last_update_id": 311441896
+  }
+]
